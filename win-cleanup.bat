@@ -26,27 +26,27 @@ goto menu
 	cls
 	echo.
 	echo  :: WINDOWS 10 AME SETUP SCRIPT Version 20.03.06
-	echo. 
+	echo.
 	echo     This script gives you a list-style overview to execute many commands
-	echo. 
-	echo  :: NOTE: For Windows 10 Builds 1809 & 1903 Only
-	echo. 
+	echo.
+	echo  :: NOTE: For Windows 10 Builds 1809 and 1903 Only
+	echo.
 	echo     1. Run Pre-Amelioration
 	echo     2. Run Post-Amelioration
 	echo     3. User Permissions
 	echo     4. Restart System
-	echo. 
+	echo.
 	echo  :: Type a 'number' and press ENTER
 	echo  :: Type 'exit' to quit
 	echo.
-	
+
 	set /P menu=
 		if %menu%==1 GOTO preame
 		if %menu%==2 GOTO programs
-		if %menu%==3 GOTO user		
+		if %menu%==3 GOTO user
 		if %menu%==4 GOTO reboot
 		if %menu%==exit GOTO EOF
-		
+
 		else (
 		cls
 	echo.
@@ -58,7 +58,7 @@ goto menu
 		pause > NUL
 		goto menu
 		)
-		
+
 :preame
 cls
 :: DotNet 3.5 Installation from install media
@@ -287,7 +287,7 @@ PowerShell -Command "Get-AppxPackage *CommsPhone* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *ConnectivityStore* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *Microsoft.Messaging* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *ContentDeliveryManager* | Remove-AppxPackage"
-PowerShell -Command "Get-AppxPackage *Microsoft.WindowsStore* | Remove-AppxPackage"
+:: PowerShell -Command "Get-AppxPackage *Microsoft.WindowsStore* | Remove-AppxPackage"
 
 :: Editing Hosts File, placebo
 cls
@@ -296,7 +296,7 @@ echo  :: Editing Hosts File
 timeout /t 2 /nobreak
 
 SET NEWLINE=^& echo.
- 
+
 FIND /C /I "telemetry.microsoft.com" %WINDIR%\system32\drivers\etc\hosts > NUL 2>&1
 IF %ERRORLEVEL% NEQ 0 ECHO %NEWLINE%^0.0.0.0 telemetry.microsoft.com>>%WINDIR%\System32\drivers\etc\hosts
 FIND /C /I "vortex.data.microsoft.com" %WINDIR%\system32\drivers\etc\hosts > NUL 2>&1
@@ -458,14 +458,14 @@ cls
 		echo  :: Installing Packages...
 		echo.
 		timeout /t 1 /nobreak > NUL
-				
+
 		@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
 
 
 		:: Add/Remove packages here. Use chocolatey to 'search' for packages matching a term to get the proper name or head over to https://chocolatey.org/packages
 
 		:: Recommended optional packages include: libreoffice steam adobeair ffmpeg mpv youtube-dl directx cygwin babun transmission-qt audacity cdrtfe obs syncthing keepass
-		
+
 		@powershell -NoProfile -ExecutionPolicy Bypass -Command "choco install -y --force --allow-empty-checksums vlc 7zip open-shell jpegview vcredist-all directx brave"
 
 :: reg add "HKEY_CLASSES_ROOT\Directory\shell\Open with MPV" /v icon /t REG_SZ /d "C:\\ProgramData\\chocolatey\\lib\\mpv.install\\tools\\mpv-document.ico" /f
