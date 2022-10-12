@@ -173,7 +173,6 @@ cls
 sc config diagtrack start= disabled
 sc config RetailDemo start= disabled
 sc config diagnosticshub.standardcollector.service start= disabled
-sc config DiagTrack start= disabled
 sc config dmwappushservice start= disabled
 sc config HomeGroupListener start= disabled
 sc config HomeGroupProvider start= disabled
