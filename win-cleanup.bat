@@ -1,6 +1,8 @@
 :: Windows 10 Pre/Post-AME Script
 :: v3.20.03.06
 
+
+:: start ############################
 @echo off
 pushd "%~dp0"
 
@@ -10,55 +12,58 @@ echo.
 timeout /t 1 /nobreak > NUL
 openfiles > NUL 2>&1
 if %errorlevel%==0 (
-        echo Elevation found! Proceeding...
+	echo Elevation found! Proceeding...
 ) else (
-        echo  :: You are NOT running as Administrator
-        echo.
-        echo     Right-click and select ^'Run as Administrator^' and try again.
-        echo     Press any key to exit...
-        pause > NUL
-        exit
+	echo  :: You are NOT running as Administrator
+	echo.
+	echo     Right-click and select ^'Run as Administrator^' and try again.
+	echo     Press any key to exit...
+	pause > NUL
+	exit
 )
-
 goto menu
 
+
+:: menu ############################
 :menu
+cls
+echo.
+echo  :: WINDOWS 10 AME SETUP SCRIPT Version 20.03.06
+echo.
+echo     This script gives you a list-style overview to execute many commands
+echo.
+echo  :: NOTE: For Windows 10 Builds 1809 and 1903 Only
+echo.
+echo     1. Run Pre-Amelioration
+echo     2. Run Post-Amelioration
+echo     3. User Permissions
+echo     4. Restart System
+echo.
+echo  :: Type a 'number' and press ENTER
+echo  :: Type 'exit' to quit
+echo.
+
+set /P menu=
+if %menu%==1 GOTO preame
+if %menu%==2 GOTO programs
+if %menu%==3 GOTO user
+if %menu%==4 GOTO reboot
+if %menu%==exit (
+	GOTO EOF
+) else (
 	cls
-	echo.
-	echo  :: WINDOWS 10 AME SETUP SCRIPT Version 20.03.06
-	echo.
-	echo     This script gives you a list-style overview to execute many commands
-	echo.
-	echo  :: NOTE: For Windows 10 Builds 1809 and 1903 Only
-	echo.
-	echo     1. Run Pre-Amelioration
-	echo     2. Run Post-Amelioration
-	echo     3. User Permissions
-	echo     4. Restart System
-	echo.
-	echo  :: Type a 'number' and press ENTER
-	echo  :: Type 'exit' to quit
-	echo.
-
-	set /P menu=
-		if %menu%==1 GOTO preame
-		if %menu%==2 GOTO programs
-		if %menu%==3 GOTO user
-		if %menu%==4 GOTO reboot
-		if %menu%==exit GOTO EOF
-
-		else (
-		cls
 	echo.
 	echo  :: Incorrect Input Entered
 	echo.
 	echo     Please type a 'number' or 'exit'
 	echo     Press any key to retrn to the menu...
 	echo.
-		pause > NUL
-		goto menu
-		)
+	pause > NUL
+	goto menu
+)
 
+
+:: preame ############################
 :preame
 cls
 :: DotNet 3.5 Installation from install media
@@ -76,16 +81,15 @@ echo  :: Type a 'drive letter' e.g. D: and press ENTER
 echo  :: Type 'exit' to return to the menu
 echo.
 set /P drive=
-if %drive%==exit GOTO menu
+if %drive%==exit GOTO menu (
 	dism /online /enable-feature /featurename:NetFX3 /All /Source:%drive%\sources\sxs /LimitAccess
-
+)
 CLS
 echo.
 echo  :: Disabling Windows Update
 timeout /t 2 /nobreak > NUL
 net stop wuauserv
 sc config wuauserv start= disabled
-
 CLS
 echo.
 echo  :: Disabling Data Logging Services
@@ -224,7 +228,6 @@ cls
 echo.
 echo  :: Disabling Cortana
 timeout /t 2 /nobreak
-
 taskkill /F /IM SearchUI.exe
 rename "C:\Windows\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy" "C:\Windows\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy.bak" > NUL 2>&1
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d 0 /f > NUL 2>&1
@@ -243,11 +246,9 @@ REG DELETE "HKEY_CLASSES_ROOT\CABFolder\CLSID" /f > NUL 2>&1
 REG DELETE "HKEY_CLASSES_ROOT\SystemFileAssociations\.cab\CLSID" /f > NUL 2>&1
 REG DELETE "HKEY_CLASSES_ROOT\CompressedFolder\CLSID" /f > NUL 2>&1
 REG DELETE "HKEY_CLASSES_ROOT\SystemFileAssociations\.zip\CLSID" /f > NUL 2>&1
-
 :: Disable PageFile and ActiveProbing
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v ClearPageFileAtShutdown /t REG_DWORD /d 1 /f > NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NlaSvc\Parameters\Internet" /v EnableActiveProbing /t REG_DWORD /d 0 /f > NUL 2>&1
-
 :: Set Time to UTC
 RED ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /t REG_DWORD /d 1 /f > NUL 2>&1
 
@@ -293,9 +294,7 @@ cls
 echo.
 echo  :: Editing Hosts File
 timeout /t 2 /nobreak
-
 SET NEWLINE=^& echo.
-
 FIND /C /I "telemetry.microsoft.com" %WINDIR%\system32\drivers\etc\hosts > NUL 2>&1
 IF %ERRORLEVEL% NEQ 0 ECHO %NEWLINE%^0.0.0.0 telemetry.microsoft.com>>%WINDIR%\System32\drivers\etc\hosts
 FIND /C /I "vortex.data.microsoft.com" %WINDIR%\system32\drivers\etc\hosts > NUL 2>&1
@@ -424,54 +423,47 @@ FIND /C /I "23.64.0.0/14" %WINDIR%\system32\drivers\etc\hosts > NUL 2>&1
 IF %ERRORLEVEL% NEQ 0 ECHO %NEWLINE%^0.0.0.0 23.64.0.0/14>>%WINDIR%\System32\drivers\etc\hosts
 FIND /C /I "23.55.130.182" %WINDIR%\system32\drivers\etc\hosts > NUL 2>&1
 IF %ERRORLEVEL% NEQ 0 ECHO %NEWLINE%^0.0.0.0 23.55.130.182>>%WINDIR%\System32\drivers\etc\hosts
-
 :: Enable Legacy F8 Bootmenu
 bcdedit /set {default} bootmenupolicy legacy
-
 :: Disable Hibernation to make NTFS accessable outside of Windows
 powercfg /h off
-
 goto menu
 
+
+:: programs ############################
 :programs
 cls
-	echo.
-	echo  :: Checking For Internet Connection...
-	echo.
-	timeout /t 2 /nobreak > NUL
-
-	ping -n 1 archlinux.org -w 20000 >nul
-
-	if %errorlevel% == 0 (
+echo.
+echo  :: Checking For Internet Connection...
+echo.
+timeout /t 2 /nobreak > NUL
+ping -n 1 archlinux.org -w 20000 >nul
+if %errorlevel% == 0 (
 	echo Internet Connection Found! Proceeding...
-	) else (
-		echo  :: You are NOT connected to the Internet
-		echo.
-        echo     Please enable your Networking adapter and connect to try again.
-        echo     Press any key to retry...
-        pause > NUL
-        goto packages
-	)
-		cls
-		echo.
-		echo  :: Installing Packages...
-		echo.
-		timeout /t 1 /nobreak > NUL
+) else (
+	echo  :: You are NOT connected to the Internet
+	echo.
+	echo     Please enable your Networking adapter and connect to try again.
+	echo     Press any key to retry...
+	pause > NUL
+	goto packages
+)
+cls
+echo.
+echo  :: Installing Packages...
+echo.
+timeout /t 1 /nobreak > NUL
 
-		@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
-
-
-		:: Add/Remove packages here. Use chocolatey to 'search' for packages matching a term to get the proper name or head over to https://chocolatey.org/packages
-
-		:: Recommended optional packages include: libreoffice steam adobeair ffmpeg mpv youtube-dl directx cygwin babun transmission-qt audacity cdrtfe obs syncthing keepass
-
-		@powershell -NoProfile -ExecutionPolicy Bypass -Command "choco install -y --force --allow-empty-checksums vlc 7zip open-shell jpegview vcredist-all directx brave"
-
+@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
+:: Add/Remove packages here. Use chocolatey to 'search' for packages matching a term to get the proper name or head over to https://chocolatey.org/packages
+:: Recommended optional packages include: libreoffice steam adobeair ffmpeg mpv youtube-dl directx cygwin babun transmission-qt audacity cdrtfe obs syncthing keepass
+@powershell -NoProfile -ExecutionPolicy Bypass -Command "choco install -y --force --allow-empty-checksums vlc 7zip open-shell jpegview vcredist-all directx brave"
 :: reg add "HKEY_CLASSES_ROOT\Directory\shell\Open with MPV" /v icon /t REG_SZ /d "C:\\ProgramData\\chocolatey\\lib\\mpv.install\\tools\\mpv-document.ico" /f
 :: reg add "HKCR\Directory\shell\Open with MPV\command" /v @ /t REG_SZ /d "mpv \"%1\"" /f
-
 goto menu
 
+
+:: user ############################
 :: Open User preferences to configure administrator/user permissions
 :user
 cls
@@ -482,9 +474,10 @@ timeout /t 2 /nobreak > NUL
 
 net user administrator /active:yes
 netplwiz
-
 goto menu
 
+
+:: reboot ############################
 :reboot
 	cls
 	shutdown -t 2 -r -f
