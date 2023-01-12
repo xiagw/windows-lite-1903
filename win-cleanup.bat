@@ -80,16 +80,16 @@ echo.
 echo  :: Type a 'drive letter' e.g. D: and press ENTER
 echo  :: Type 'exit' to return to the menu
 echo.
-set /P drive=
-if %drive%==exit GOTO menu (
-	dism /online /enable-feature /featurename:NetFX3 /All /Source:%drive%\sources\sxs /LimitAccess
-)
+@REM set /P drive=
+@REM if %drive%==exit GOTO menu (
+@REM 	dism /online /enable-feature /featurename:NetFX3 /All /Source:%drive%\sources\sxs /LimitAccess
+@REM )
 CLS
 echo.
 echo  :: Disabling Windows Update
 timeout /t 2 /nobreak > NUL
-:: net stop wuauserv
-:: sc config wuauserv start= disabled
+@REM net stop wuauserv
+@REM sc config wuauserv start= disabled
 CLS
 echo.
 echo  :: Disabling Data Logging Services
@@ -171,7 +171,7 @@ reg export "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata" HKLM
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata" /f
 
 :: New Control Panel cleanup
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v SettingsPageVisibility /t REG_SZ /d "showonly:defaultapps;display;nightlight;sound;powersleep;batterysaver;batterysaver-usagedetails;batterysaver-settings;multitasking;about;bluetooth;connecteddevices;printers;mousetouchpad;devices-touchpad;typing;pen;autoplay;usb;network-status;network-cellular;network-wifi;network-wificalling;network-wifisettings;network-ethernet;network-dialup;netowrk-vpn;network-airplanemode;network-mobilehotspot;datausage;network-proxy;personalization-background;colors;lockscreen;themes;taskbar;easeofaccess-narrator;easeofaccess-magnifier;easeofaccess-highcontrast;easeofaccess-closedcaptioning;easeofaccess-keyboard;easeofaccess-mouse;easeofaccess-otheroptions;dateandtime;notifications" /f > NUL 2>&1
+@REM reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v SettingsPageVisibility /t REG_SZ /d "showonly:defaultapps;display;nightlight;sound;powersleep;batterysaver;batterysaver-usagedetails;batterysaver-settings;multitasking;about;bluetooth;connecteddevices;printers;mousetouchpad;devices-touchpad;typing;pen;autoplay;usb;network-status;network-cellular;network-wifi;network-wificalling;network-wifisettings;network-ethernet;network-dialup;netowrk-vpn;network-airplanemode;network-mobilehotspot;datausage;network-proxy;personalization-background;colors;lockscreen;themes;taskbar;easeofaccess-narrator;easeofaccess-magnifier;easeofaccess-highcontrast;easeofaccess-closedcaptioning;easeofaccess-keyboard;easeofaccess-mouse;easeofaccess-otheroptions;dateandtime;notifications" /f > NUL 2>&1
 
 :: Disabling And Stopping Services
 cls
@@ -245,15 +245,15 @@ echo.
 echo  :: Setup Windows Explorer View
 timeout /t 2 /nobreak
 REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v LaunchTo /t REG_DWORD /d 1 /f > NUL 2>&1
-:: REG DELETE "HKCR\CABFolder\CLSID" /f > NUL 2>&1
-:: REG DELETE "HKCR\SystemFileAssociations\.cab\CLSID" /f > NUL 2>&1
-:: REG DELETE "HKCR\CompressedFolder\CLSID" /f > NUL 2>&1
-:: REG DELETE "HKCR\SystemFileAssociations\.zip\CLSID" /f > NUL 2>&1
+@REM REG DELETE "HKCR\CABFolder\CLSID" /f > NUL 2>&1
+@REM REG DELETE "HKCR\SystemFileAssociations\.cab\CLSID" /f > NUL 2>&1
+@REM REG DELETE "HKCR\CompressedFolder\CLSID" /f > NUL 2>&1
+@REM REG DELETE "HKCR\SystemFileAssociations\.zip\CLSID" /f > NUL 2>&1
 :: Disable PageFile and ActiveProbing
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v ClearPageFileAtShutdown /t REG_DWORD /d 1 /f > NUL 2>&1
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Services\NlaSvc\Parameters\Internet" /v EnableActiveProbing /t REG_DWORD /d 0 /f > NUL 2>&1
 :: Set Time to UTC
-:: RED ADD "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /t REG_DWORD /d 1 /f > NUL 2>&1
+@REM RED ADD "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /t REG_DWORD /d 1 /f > NUL 2>&1
 
 :: Removing AppXPackages, the ModernUI Apps, including Cortana
 cls
@@ -267,7 +267,7 @@ PowerShell -Command "Get-AppxPackage *MixedRealityPortal* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *Microsoft.Caclulator* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *Microsoft.WindowsAlarms* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *Microsoft.GetHelp* | Remove-AppxPackage"
-:: PowerShell -Command "Get-AppxPackage *Microsoft.* | Remove-AppxPackage"
+@REM PowerShell -Command "Get-AppxPackage *Microsoft.* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *Getstarted* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *Microsoft.OneConnect* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *WindowsAlarms* | Remove-AppxPackage"
@@ -290,7 +290,8 @@ PowerShell -Command "Get-AppxPackage *CommsPhone* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *ConnectivityStore* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *Microsoft.Messaging* | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage *ContentDeliveryManager* | Remove-AppxPackage"
-:: PowerShell -Command "Get-AppxPackage *Microsoft.WindowsStore* | Remove-AppxPackage"
+@REM PowerShell -Command "Get-AppxPackage *Microsoft.WindowsStore* | Remove-AppxPackage"
+goto :menu
 
 :: Editing Hosts File, placebo
 cls
